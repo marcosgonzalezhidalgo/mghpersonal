@@ -106,4 +106,87 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('quickNotes', notesArea.value);
         });
     }
+
+    // Chatbox Logic
+    const chatToggle = document.getElementById('chat-toggle');
+    const chatWindow = document.getElementById('chat-window');
+    const chatClose = document.getElementById('chat-close');
+    const chatInput = document.getElementById('chat-input');
+    const chatSend = document.getElementById('chat-send');
+    const chatMessages = document.getElementById('chat-messages');
+
+    function toggleChat() {
+        chatWindow.classList.toggle('active');
+        const icon = chatToggle.querySelector('i');
+        if (chatWindow.classList.contains('active')) {
+            icon.classList.remove('fa-sparkles');
+            icon.classList.add('fa-chevron-down');
+        } else {
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-sparkles');
+        }
+    }
+
+    chatToggle.addEventListener('click', toggleChat);
+    chatClose.addEventListener('click', toggleChat);
+
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        // Add user message
+        addMessage(message, 'user');
+        chatInput.value = '';
+        chatInput.disabled = true;
+
+        // Loading state
+        const loadingId = addMessage('Escribiendo...', 'bot', true);
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await response.json();
+
+            // Remove loading message
+            removeMessage(loadingId);
+
+            if (response.ok) {
+                addMessage(data.reply, 'bot');
+            } else {
+                addMessage('Lo siento, hubo un error al conectar con Gemini.', 'bot');
+                console.error(data.error);
+            }
+        } catch (error) {
+            removeMessage(loadingId);
+            addMessage('Error de conexión.', 'bot');
+            console.error(error);
+        } finally {
+            chatInput.disabled = false;
+            chatInput.focus();
+        }
+    }
+
+    function addMessage(text, sender, isLoading = false) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.textContent = text;
+        if (isLoading) msgDiv.id = 'loading-msg';
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return msgDiv.id;
+    }
+
+    function removeMessage(id) {
+        const msg = document.getElementById('loading-msg');
+        if (msg) msg.remove();
+    }
+
+    chatSend.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
 });

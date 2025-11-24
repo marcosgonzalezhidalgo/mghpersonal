@@ -80,6 +80,29 @@
         </footer>
     </main>
 
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <button id="chat-toggle" class="chat-toggle">
+            <i class="fas fa-sparkles"></i>
+        </button>
+
+        <div class="chat-window" id="chat-window">
+            <div class="chat-header">
+                <h3><i class="fas fa-robot"></i> Gemini AI</h3>
+                <button id="chat-close" class="chat-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot">
+                    Hola, soy tu asistente virtual. ¿En qué puedo ayudarte?
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Escribe un mensaje...">
+                <button id="chat-send"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 
