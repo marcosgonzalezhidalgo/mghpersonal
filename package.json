@@ -2,5 +2,7 @@
   "name": "personal-website",
   "version": "1.0.0",
   "type": "module",
-  "dependencies": {}
+  "dependencies": {
+    "@google/generative-ai": "^0.1.3"
+  }
 }
