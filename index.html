@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcos González | Estudiante de Ingeniería Informática</title>
+    <meta name="description"
+        content="Portfolio y página personal de Marcos González, estudiante de Ingeniería Informática.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Placeholder for FontAwesome, might need a real kit or CDN if this fails -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="background-animation"></div>
+
+    <main class="container">
+        <header class="hero">
+            <div class="profile-container">
+                <div class="profile-img-wrapper">
+                    <!-- Placeholder for profile image, using a generic avatar for now -->
+                    <img src="https://ui-avatars.com/api/?name=Marcos+G&background=0D8ABC&color=fff&size=200"
+                        alt="Marcos González" class="profile-img">
+                </div>
+                <h1>Marcos González</h1>
+                <p class="subtitle">Estudiante de Ingeniería Informática</p>
+            </div>
+        </header>
+
+        <section class="bento-grid">
+            <div class="card link-card github">
+                <a href="https://github.com/marcosgonzalezhidalgo" target="_blank" class="card-header-link">
+                    <div class="card-header">
+                        <div class="icon-wrapper"><i class="fab fa-github"></i></div>
+                        <div class="card-content">
+                            <h3>GitHub</h3>
+                            <p>Mis proyectos destacados</p>
+                        </div>
+                        <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </a>
+                <div id="github-repos" class="repos-container">
+                    <!-- Repos will be injected here -->
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Cargando repositorios...</div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <a href="http://panal.uneatlantico.es/" target="_blank" class="card link-card university">
+                    <div class="icon-wrapper"><i class="fas fa-university"></i></div>
+                    <div class="card-content">
+                        <h3>Universidad</h3>
+                    </div>
+                </a>
+
+                <a href="https://drive.google.com/drive/u/0/my-drive" target="_blank" class="card link-card drive">
+                    <div class="icon-wrapper"><i class="fab fa-google-drive"></i></div>
+                    <div class="card-content">
+                        <h3>Drive</h3>
+                    </div>
+                </a>
+
+                <div class="card quick-notes span-2-col">
+                    <div class="card-header">
+                        <div class="icon-wrapper"><i class="fas fa-sticky-note"></i></div>
+                        <h3>Notas Rápidas</h3>
+                    </div>
+                    <textarea id="quick-notes-area" placeholder="Escribe aquí tus notas..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2025 Marcos González. Hecho con HTML, CSS y JavaScript.</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
