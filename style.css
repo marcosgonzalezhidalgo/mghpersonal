@@ -435,6 +435,13 @@ h1 {
     transform: scale(1.1);
 }
 
+.chat-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
 .chat-window {
     position: absolute;
     bottom: 80px;

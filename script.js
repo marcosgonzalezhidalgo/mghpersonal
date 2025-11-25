@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Add staggered animation delay to cards
     const cards = document.querySelectorAll('.card');
     cards.forEach((card, index) => {
         card.style.opacity = '0';
         card.style.animation = `fadeIn 0.5s ease-out forwards ${0.5 + (index * 0.1)}s`;
     });
 
-    // 3D Tilt Effect for cards
     cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
@@ -16,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
 
-            const rotateX = ((y - centerY) / centerY) * -5; // Max rotation deg
+            const rotateX = ((y - centerY) / centerY) * -5;
             const rotateY = ((x - centerX) / centerX) * 5;
 
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
@@ -27,13 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // GitHub API Integration
-    const username = 'marcosgonzalezhidalgo'; // Replace with your GitHub username
+    const username = 'marcosgonzalezhidalgo';
     const reposContainer = document.getElementById('github-repos');
-
-    // Lista de nombres de repositorios que quieres fijar (tal cual aparecen en la URL de GitHub)
-    // Ejemplo: ['mi-proyecto-1', 'portfolio', 'otro-repo']
-    // Si dejas esto vacío [], se mostrarán los últimos actualizados.
     const pinnedRepoNames = ['repo.pruebas', '25-26-EDA1', 'BaseDeDatos1-25-26'];
 
     async function fetchGitHubRepos() {
@@ -43,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
             let repos = [];
 
             if (pinnedRepoNames.length > 0) {
-                // Fetch specific pinned repos
                 const promises = pinnedRepoNames.map(name =>
                     fetch(`https://api.github.com/repos/${username}/${name}`).then(res => {
                         if (!res.ok) return null;
@@ -53,13 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const results = await Promise.all(promises);
                 repos = results.filter(repo => repo !== null);
             } else {
-                // Fetch latest updated repos
                 const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=3`);
                 if (!response.ok) throw new Error('GitHub API error');
                 repos = await response.json();
             }
 
-            reposContainer.innerHTML = ''; // Clear loading spinner
+            reposContainer.innerHTML = '';
 
             if (repos.length === 0) {
                 reposContainer.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.9rem;">No se encontraron repositorios.</p>';
@@ -92,22 +83,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchGitHubRepos();
 
-    // Quick Notes Functionality
     const notesArea = document.getElementById('quick-notes-area');
     if (notesArea) {
-        // Load saved notes
         const savedNotes = localStorage.getItem('quickNotes');
         if (savedNotes) {
             notesArea.value = savedNotes;
         }
 
-        // Save notes on input
         notesArea.addEventListener('input', () => {
             localStorage.setItem('quickNotes', notesArea.value);
         });
     }
 
-    // Chatbox Logic
     const chatToggle = document.getElementById('chat-toggle');
     const chatWindow = document.getElementById('chat-window');
     const chatClose = document.getElementById('chat-close');
@@ -117,13 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toggleChat() {
         chatWindow.classList.toggle('active');
-        const icon = chatToggle.querySelector('i');
+        const img = chatToggle.querySelector('img');
+
         if (chatWindow.classList.contains('active')) {
-            icon.classList.remove('fa-sparkles');
-            icon.classList.add('fa-chevron-down');
+            // Change to close icon (or just hide image and show icon if preferred, but let's swap src or use a class)
+            // Simpler approach: Rotate the button or change opacity
+            chatToggle.style.transform = 'rotate(45deg)';
         } else {
-            icon.classList.remove('fa-chevron-down');
-            icon.classList.add('fa-sparkles');
+            chatToggle.style.transform = 'rotate(0deg)';
         }
     }
 
@@ -134,12 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const message = chatInput.value.trim();
         if (!message) return;
 
-        // Add user message
         addMessage(message, 'user');
         chatInput.value = '';
         chatInput.disabled = true;
 
-        // Loading state
         const loadingId = addMessage('Escribiendo...', 'bot', true);
 
         try {
@@ -151,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
-            // Remove loading message
             removeMessage(loadingId);
 
             if (response.ok) {
