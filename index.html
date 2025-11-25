@@ -16,6 +16,18 @@
 </head>
 
 <body>
+    <!-- Commits Dropdown -->
+    <div class="commits-dropdown-container">
+        <button id="commits-toggle" class="commits-toggle">
+            <i class="fas fa-code-branch"></i> Últimos Commits <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="commits-dropdown" id="commits-dropdown">
+            <div class="commits-list" id="commits-list">
+                <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Cargando commits...</div>
+            </div>
+        </div>
+    </div>
+
     <div class="background-animation"></div>
 
     <main class="container">

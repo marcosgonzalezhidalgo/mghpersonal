@@ -174,4 +174,108 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
     });
+
+    // Commits Dropdown Logic
+    const commitsToggle = document.getElementById('commits-toggle');
+    const commitsDropdown = document.getElementById('commits-dropdown');
+    const commitsList = document.getElementById('commits-list');
+
+    // -------------------------------------------------------------------------
+    // CONFIGURACIÓN DE REPOSITORIOS (EDITAR AQUÍ)
+    // -------------------------------------------------------------------------
+    // Para añadir un nuevo repositorio, copia una línea y cambia los datos.
+    // owner: El dueño del repositorio (usuario de GitHub)
+    // repo: El nombre exacto del repositorio
+    // color: El color con el que saldrá el nombre del repo (hex o nombre en inglés)
+    const trackedRepos = [
+        { owner: 'mmasias', repo: '25-26-EDA1', color: '#3b82f6' },          // Azul
+        { owner: 'mmasias', repo: 'EDA1', color: '#10b981' },                // Verde
+        { owner: 'LorenzoPerezUnea', repo: 'BaseDeDatos1-25-26', color: '#f59e0b' } // Naranja
+    ];
+    // -------------------------------------------------------------------------
+
+    commitsToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        commitsDropdown.classList.toggle('active');
+        const icon = commitsToggle.querySelector('.fa-chevron-down');
+        if (commitsDropdown.classList.contains('active')) {
+            icon.style.transform = 'rotate(180deg)';
+            if (commitsList.children.length <= 1) {
+                fetchCommits();
+            }
+        } else {
+            icon.style.transform = 'rotate(0deg)';
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!commitsDropdown.contains(e.target) && !commitsToggle.contains(e.target)) {
+            commitsDropdown.classList.remove('active');
+            const icon = commitsToggle.querySelector('.fa-chevron-down');
+            if (icon) icon.style.transform = 'rotate(0deg)';
+        }
+    });
+
+    function timeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        let interval = seconds / 31536000;
+        if (interval > 1) return Math.floor(interval) + " años";
+        interval = seconds / 2592000;
+        if (interval > 1) return Math.floor(interval) + " meses";
+        interval = seconds / 86400;
+        if (interval > 1) return Math.floor(interval) + " días";
+        interval = seconds / 3600;
+        if (interval > 1) return Math.floor(interval) + " horas";
+        interval = seconds / 60;
+        if (interval > 1) return Math.floor(interval) + " minutos";
+        return Math.floor(seconds) + " segundos";
+    }
+
+    async function fetchCommits() {
+        try {
+            const promises = trackedRepos.map(config =>
+                fetch(`https://api.github.com/repos/${config.owner}/${config.repo}/commits?per_page=3`)
+                    .then(res => res.ok ? res.json() : [])
+                    .then(commits => commits.map(commit => ({
+                        repo: config.repo,
+                        owner: config.owner,
+                        color: config.color,
+                        message: commit.commit.message,
+                        date: new Date(commit.commit.author.date),
+                        url: commit.html_url
+                    })))
+            );
+
+            const results = await Promise.all(promises);
+            const allCommits = results.flat().sort((a, b) => b.date - a.date).slice(0, 10);
+
+            commitsList.innerHTML = '';
+
+            if (allCommits.length === 0) {
+                commitsList.innerHTML = '<div style="padding:1rem; text-align:center; color:var(--text-secondary)">No se encontraron commits recientes.</div>';
+                return;
+            }
+
+            allCommits.forEach(commit => {
+                const timeString = timeAgo(commit.date);
+                const item = document.createElement('a');
+                item.href = commit.url;
+                item.target = '_blank';
+                item.className = 'commit-item';
+                // Aplicamos el color específico al borde y al nombre del repo
+                item.style.borderLeftColor = commit.color;
+
+                item.innerHTML = `
+                    <div class="commit-repo" style="color: ${commit.color}">${commit.repo}</div>
+                    <div class="commit-message">${commit.message}</div>
+                    <div class="commit-date"><i class="far fa-clock"></i> hace ${timeString}</div>
+                `;
+                commitsList.appendChild(item);
+            });
+
+        } catch (error) {
+            console.error('Error fetching commits:', error);
+            commitsList.innerHTML = '<div style="padding:1rem; text-align:center; color:#ef4444">Error al cargar commits.</div>';
+        }
+    }
 });
